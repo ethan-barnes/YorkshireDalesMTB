@@ -1,12 +1,7 @@
 package yorkshiredalesmtb;
 
-import java.util.Arrays;
-
 public class YorkshireDalesMTB {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         Item items[] = {
             Item.BIKE,
@@ -22,15 +17,17 @@ public class YorkshireDalesMTB {
             Item.HELMET
         };
         ShopMonitor shop = new ShopMonitor(items);
-        Thread threads[] = new Thread[10];
+        Thread threads[] = new Thread[5]; // Number of visitors
+        
+        Model model = new Model();
+        View view = new View();
+        Controller controller = new Controller(model, view, shop);
 
         for (int i = 0; i < threads.length; i++) {
-            threads[i] = new Thread(new VisitorControl(new Visitor(), shop), "Visitor " + (i+1));
+            threads[i] = new Thread(new VisitorControl(new Visitor(controller), shop, controller), "Visitor " + (i + 1));
         }
         for (Thread thread : threads) {
             thread.start();
         }
-
     }
-
 }
