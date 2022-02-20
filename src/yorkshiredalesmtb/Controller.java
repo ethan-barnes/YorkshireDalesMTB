@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package yorkshiredalesmtb;
-import java.beans.*;
 /**
  * https://stackoverflow.com/questions/59263498/adding-swing-gui-to-existing-working-java-program
  * @author barne
@@ -16,13 +15,11 @@ public class Controller {
     
     private final Model model;
     private final View view;
-    private final ShopMonitor shopMonitor;
     
-    public Controller(Model model, View view, ShopMonitor shopMonitor) {
+    public Controller(Model model, View view) {
         this.model = model;
-        this.view = view;
-        this.shopMonitor = shopMonitor;
-        view.createAndShowGUI(model);
+        this.view = view;        
+        view.createAndShowGUI(model, this);
     }
     
     // Is called when visitor status changes.
@@ -37,7 +34,7 @@ public class Controller {
     }
     
     public void changeShopList() {
-        view.updateShopList(shopMonitor);
+        view.updateShopList();
     }
     
     

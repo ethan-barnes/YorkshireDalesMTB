@@ -4,7 +4,7 @@ public class Visitor {
     
     private Status currentStatus;
     private Item[] items = new Item[4];
-    private Controller controller;
+    private final Controller controller;
 
     public Visitor(Controller controller) {
         currentStatus = null;
