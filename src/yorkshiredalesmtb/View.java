@@ -51,7 +51,7 @@ public class View {
     }
 
     private void createMainWindow() {
-        if (model.getVisitorNum() > 10) {
+        if (Math.abs(model.getVisitorNum()) > 10) {
             model.setVisitorNum(10);
         } else {
             model.setVisitorNum(Math.abs(model.getVisitorNum()));
