@@ -5,9 +5,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ShopMonitor {
-
+    
     private Item[] items;
-
+    
     public ShopMonitor(Item[] itemArray) {
         items = itemArray;
     }
@@ -15,7 +15,7 @@ public class ShopMonitor {
     public Item[] getItems() {
         return items;
     }
-
+    
     public synchronized void returnItems(Item[] items) {
         for (Item item : items) {
             if (item != null) {
@@ -26,12 +26,16 @@ public class ShopMonitor {
             }
         }
     }
-
-    public synchronized boolean takeItems(Item[] items) {
+    
+    public synchronized boolean takeItems(Item[] items, Boolean speed) {
         Item[] cachedItems = this.items;
         for (Item item : items) {
             try {
-                TimeUnit.MILLISECONDS.sleep(100);
+                if (speed) {
+                    TimeUnit.MILLISECONDS.sleep(100);
+                } else {
+                    TimeUnit.MILLISECONDS.sleep(1000);
+                }
             } catch (InterruptedException ex) {
                 Logger.getLogger(ShopMonitor.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -48,7 +52,7 @@ public class ShopMonitor {
         }
         return true;
     }
-
+    
     private int getItemPos(Item item) {
         for (int i = 0; i < items.length; i++) {
             if (items[i] == item) {
@@ -57,5 +61,5 @@ public class ShopMonitor {
         }
         return -1;
     }
-
+    
 }

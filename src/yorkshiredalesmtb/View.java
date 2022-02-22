@@ -1,24 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package yorkshiredalesmtb;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.NumberFormat;
 import java.util.Arrays;
 import javax.swing.*;
-import javax.swing.text.NumberFormatter;
 
-/**
- * https://stackoverflow.com/questions/59263498/adding-swing-gui-to-existing-working-java-program
- *
- * @author barne
- *
- * View only contains the user interface part
- */
 public class View {
 
     private Controller controller;
@@ -32,7 +18,7 @@ public class View {
     private JLabel[] visitors;
     private DefaultListModel<String> shopListVals;
     public DefaultListModel<String> statusListVals;
-    private final ThreadRunner tr = new ThreadRunner();
+    private final ThreadController threadController = new ThreadController();
 
     public void createAndShowGUI(Model model, Controller controller) {
         this.model = model;
@@ -46,17 +32,11 @@ public class View {
         frame.add(panel);
         frame.setSize(800, 800);
         frame.setVisible(true);
-
-        //createMainWindow();
     }
 
     private void createMainWindow() {
-        if (Math.abs(model.getVisitorNum()) > 10) {
-            model.setVisitorNum(10);
-        } else {
-            model.setVisitorNum(Math.abs(model.getVisitorNum()));
-        }
-        panel = new JPanel(new GridLayout(0, 2 + model.getVisitorNum()));
+        model.setVisitorNum(Math.abs(model.getVisitorNum()));
+        panel = new JPanel(new GridLayout(/*3 + model.getVisitorNum()*/0, 3));
 
         createElements();
 
@@ -101,12 +81,34 @@ public class View {
                         Integer.parseInt(jacketField.getText()));
                 frame.dispose();
                 createMainWindow();
-                tr.runProgram(model, controller, new ShopMonitor(model.getItems()));
+                threadController.runProgram(model, controller, new ShopMonitor(model.getItems()));
             } catch (NumberFormatException ex) {
                 System.out.println("Error with inputted values. " + ex);
             }
         });
         panel.add(submit);
+    }
+
+    private void createButtons() {
+        JButton addVisitorBtn = new JButton("Add visitor");
+        addVisitorBtn.addActionListener((ActionEvent e) -> {
+            model.setVisitorNum(model.getVisitorNum() + 1);
+            createVisitors();
+            threadController.addVisitor();
+        });
+
+        JButton slowBtn = new JButton("Slower");
+        slowBtn.addActionListener((ActionEvent e) -> {
+            threadController.setSpeed(false);
+        });
+        
+        JButton fastBtn = new JButton("Faster");
+        fastBtn.addActionListener((ActionEvent e) -> {
+            threadController.setSpeed(true);
+        });
+        panel.add(addVisitorBtn);
+        panel.add(slowBtn);
+        panel.add(fastBtn);
     }
 
     private void createStatusList() {
@@ -121,44 +123,27 @@ public class View {
     private void createShop() {
         shopListVals = new DefaultListModel<>();
         shopList = new JList<>(shopListVals);
+        panel.add(new JLabel()); // blank space for formatting
         panel.add(shopList);
     }
 
     private void createVisitors() {
-        JLabel visitor0 = new JLabel();
-        JLabel visitor1 = new JLabel();
-        JLabel visitor2 = new JLabel();
-        JLabel visitor3 = new JLabel();
-        JLabel visitor4 = new JLabel();
-        JLabel visitor5 = new JLabel();
-        JLabel visitor6 = new JLabel();
-        JLabel visitor7 = new JLabel();
-        JLabel visitor8 = new JLabel();
-        JLabel visitor9 = new JLabel();
-
-        JLabel visitorsStandBy[] = {
-            visitor0,
-            visitor1,
-            visitor2,
-            visitor3,
-            visitor4,
-            visitor5,
-            visitor6,
-            visitor7,
-            visitor8,
-            visitor9,};
-
+        for (int i = 0; i < model.getVisitorNum(); i++) {
+            try {
+                panel.remove(visitors[i]);
+            } catch (Exception e) {
+                // this happens first time anyway
+            }
+        }
         visitors = new JLabel[model.getVisitorNum()];
-        // Copies number of visitors requested from visitorsStandBy into this.visitors.
-        System.arraycopy(visitorsStandBy, 0, visitors, 0, model.getVisitorNum());
-
-        for (int i = 0; i < visitors.length; i++) {
-            visitors[i].setText("Visitor " + (i + 1));
+        for (int i = 0; i < model.getVisitorNum(); i++) {
+            visitors[i] = new JLabel("Visitor " + (i + 1));
             panel.add(visitors[i]);
         }
     }
 
     private void createElements() {
+        createButtons();
         createStatusList();
         createShop();
         createVisitors();
