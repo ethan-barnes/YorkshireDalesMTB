@@ -31,23 +31,16 @@ public class VisitorControl implements Runnable {
         Item[] items = new Item[4];
         for (int i = 0; i < 4; i++) {
             if (rand.nextBoolean()) {
+                rents = true;
                 switch (i) {
-                    case 0 -> {
+                    case 0 ->
                         items[i] = Item.BIKE;
-                        rents = true;
-                    }
-                    case 1 -> {
+                    case 1 ->
                         items[i] = Item.GLOVES;
-                        rents = true;
-                    }
-                    case 2 -> {
+                    case 2 ->
                         items[i] = Item.HELMET;
-                        rents = true;
-                    }
-                    case 3 -> {
+                    case 3 ->
                         items[i] = Item.JACKET;
-                        rents = true;
-                    }
                 }
             }
         }
@@ -90,12 +83,6 @@ public class VisitorControl implements Runnable {
     }
 
     private void walk() {
-//        int sleepTime = 0;
-//        if (visitor.getSpeed()) {
-//            sleepTime = (int) ((Math.random() * (5 - 1)) + 1);
-//        } else {
-//            sleepTime = (int) ((Math.random() * (10 - 6)) + 6);
-//        }
         int sleepTime = visitor.getSpeed() ? (int) ((Math.random() * (5 - 1)) + 1) : (int) ((Math.random() * (10 - 6)) + 6);
         System.out.println(Thread.currentThread().getName() + " walks around for " + sleepTime + " seconds.");
         try {
