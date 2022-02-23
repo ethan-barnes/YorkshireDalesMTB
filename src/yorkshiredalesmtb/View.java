@@ -56,7 +56,7 @@ public class View {
         JTextField helmetField = new JTextField("2");
         JLabel jacketLabel = new JLabel("   Jackets");
         JTextField jacketField = new JTextField("3");
-        JLabel visitorLabel = new JLabel("   Visitors (max. 10)");
+        JLabel visitorLabel = new JLabel("   Visitors");
         JTextField visitorField = new JTextField("6");
 
         panel.add(bikeLabel);
