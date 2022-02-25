@@ -75,10 +75,10 @@ public class View {
             try {
                 model.setVisitorNum(Integer.parseInt(visitorField.getText()));
                 model.setItems(
-                        Integer.parseInt(bikeField.getText()),
-                        Integer.parseInt(glovesField.getText()),
-                        Integer.parseInt(helmetField.getText()),
-                        Integer.parseInt(jacketField.getText()));
+                        Math.abs(Integer.parseInt(bikeField.getText())),
+                        Math.abs(Integer.parseInt(glovesField.getText())),
+                        Math.abs(Integer.parseInt(helmetField.getText())),
+                        Math.abs(Integer.parseInt(jacketField.getText())));
                 frame.dispose();
                 createMainWindow();
                 threadController.runProgram(model, controller, new ShopMonitor(model.getItems()));
