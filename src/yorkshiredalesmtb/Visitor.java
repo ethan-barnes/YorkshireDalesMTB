@@ -1,12 +1,24 @@
 package yorkshiredalesmtb;
 
 public class Visitor {
-
+    
     private Status currentStatus;
     private Item[] items = new Item[4];
+    private final Controller controller;
+    private boolean speed = true;
 
-    public Visitor() {
+    public Visitor(Controller controller, boolean speed) {
         currentStatus = null;
+        this.controller = controller;
+        this.speed = speed;
+    }
+    
+    public boolean getSpeed() {
+        return speed;
+    }
+    
+    public void setSpeed(Boolean s) {
+        speed = s;
     }
 
     public Item[] getItems() {
@@ -44,6 +56,12 @@ public class Visitor {
 
     public void setStatus(Status s) {
         currentStatus = s;
+        controller.changeStatus(this, Thread.currentThread().getName());
+    }
+    
+    public void setStatus(Status s, Item[] items) {
+        currentStatus = s;
+        controller.changeStatus(this, Thread.currentThread().getName(), items);
     }
 
     public Status getStatus() {

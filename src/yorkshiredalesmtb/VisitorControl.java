@@ -9,10 +9,12 @@ public class VisitorControl implements Runnable {
     Random rand = new Random();
     Visitor visitor;
     ShopMonitor shop;
+    Controller controller;
 
-    public VisitorControl(Visitor v, ShopMonitor sm) {
+    public VisitorControl(Visitor v, ShopMonitor sm, Controller controller) {
         visitor = v;
         shop = sm;
+        this.controller = controller;
     }
 
     @Override
@@ -27,35 +29,29 @@ public class VisitorControl implements Runnable {
     private void requestItems() {
         boolean rents = false;
         Item[] items = new Item[4];
-        for (int i = 1; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             if (rand.nextBoolean()) {
+                rents = true;
                 switch (i) {
-                    case 0 -> {
+                    case 0 ->
                         items[i] = Item.BIKE;
-                        rents = true;
-                    }
-                    case 1 -> {
+                    case 1 ->
                         items[i] = Item.GLOVES;
-                        rents = true;
-                    }
-                    case 2 -> {
+                    case 2 ->
                         items[i] = Item.HELMET;
-                        rents = true;
-                    }
-                    case 3 -> {
+                    case 3 ->
                         items[i] = Item.JACKET;
-                        rents = true;
-                    }
                 }
             }
         }
 
         if (rents) { // Only request from shop if visitor wants item/s.
-            visitor.setStatus(Status.REQUESTING);
+            visitor.setStatus(Status.REQUESTING, items);
             System.out.println(Thread.currentThread().getName() + " requests to borrow " + Arrays.toString(items));
-            if (shop.getItems(items)) { // If items requested are available.
+            if (shop.takeItems(items, visitor.getSpeed())) { // If items requested are available.
                 visitor.setItems(items);
                 System.out.println(Thread.currentThread().getName() + " successfully borrows " + Arrays.toString(items));
+                controller.changeShopList();
                 cycle();
             } else {
                 run();
@@ -67,7 +63,8 @@ public class VisitorControl implements Runnable {
 
     private void cycle() {
         visitor.setStatus(Status.CYCLING);
-        int sleepTime = (int) ((Math.random() * (5 - 1)) + 1);
+        int sleepTime = visitor.getSpeed() ? (int) ((Math.random() * (5 - 1)) + 1) : (int) ((Math.random() * (10 - 6)) + 6);
+
         System.out.println(Thread.currentThread().getName() + " cycles for " + sleepTime + " seconds.");
         try {
             TimeUnit.SECONDS.sleep(sleepTime);
@@ -79,12 +76,14 @@ public class VisitorControl implements Runnable {
 
     private void returnItems() {
         System.out.println(Thread.currentThread().getName() + " returns items " + Arrays.toString(visitor.getItems()));
+        visitor.setStatus(Status.RETURNING, visitor.getItems());
         visitor.returnItems(shop);
-        visitor.setStatus(Status.RETURNING);
+        controller.changeShopList();
+        run();
     }
 
     private void walk() {
-        int sleepTime = (int) ((Math.random() * (5 - 1)) + 1);
+        int sleepTime = visitor.getSpeed() ? (int) ((Math.random() * (5 - 1)) + 1) : (int) ((Math.random() * (10 - 6)) + 6);
         System.out.println(Thread.currentThread().getName() + " walks around for " + sleepTime + " seconds.");
         try {
             TimeUnit.SECONDS.sleep(sleepTime);
