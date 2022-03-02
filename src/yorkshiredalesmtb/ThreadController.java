@@ -18,7 +18,7 @@ public class ThreadController {
         numOfVisitors = model.getVisitorNum();
         threads = new ArrayList<>();
         for (int i = 0; i < numOfVisitors; i++) {
-            threads.add(new Thread(new VisitorControl(new Visitor(controller, true), shop, controller), "Visitor " + (i + 1)));
+            threads.add(new Thread(new VisitorControl(new Visitor(controller), shop, controller), "Visitor " + (i + 1)));
         }
         for (Thread thread : threads) {
             thread.start();
@@ -27,17 +27,12 @@ public class ThreadController {
 
     public void addVisitor() {
         numOfVisitors++;
-        Thread newVisitor = new Thread(new VisitorControl(new Visitor(controller, true), shop, controller), "Visitor " + numOfVisitors);
+        Thread newVisitor = new Thread(new VisitorControl(new Visitor(controller), shop, controller), "Visitor " + numOfVisitors);
         threads.add(newVisitor);
         newVisitor.start();
     }
 
     public void setSpeed(boolean speed) {
-        for (int i = 0; i < threads.size(); i++) {
-            threads.set(i, new Thread(new VisitorControl(new Visitor(controller, speed), shop, controller), "Visitor " + (i + 1)));
-        }
-        for (Thread thread : threads) {
-            thread.start();
-        }
+        YorkshireDalesMTB.speed = speed;
     }
 }

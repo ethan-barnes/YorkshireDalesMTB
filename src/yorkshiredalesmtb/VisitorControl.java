@@ -48,7 +48,7 @@ public class VisitorControl implements Runnable {
         if (rents) { // Only request from shop if visitor wants item/s.
             visitor.setStatus(Status.REQUESTING, items);
             System.out.println(Thread.currentThread().getName() + " requests to borrow " + Arrays.toString(items));
-            if (shop.takeItems(items, visitor.getSpeed())) { // If items requested are available.
+            if (shop.takeItems(items)) { // If items requested are available.
                 visitor.setItems(items);
                 System.out.println(Thread.currentThread().getName() + " successfully borrows " + Arrays.toString(items));
                 controller.changeShopList();
@@ -63,7 +63,7 @@ public class VisitorControl implements Runnable {
 
     private void cycle() {
         visitor.setStatus(Status.CYCLING);
-        int sleepTime = visitor.getSpeed() ? (int) ((Math.random() * (5 - 1)) + 1) : (int) ((Math.random() * (10 - 6)) + 6);
+        int sleepTime = YorkshireDalesMTB.speed ? (int) ((Math.random() * (5 - 1)) + 1) : (int) ((Math.random() * (10 - 6)) + 6);
 
         System.out.println(Thread.currentThread().getName() + " cycles for " + sleepTime + " seconds.");
         try {
@@ -83,7 +83,7 @@ public class VisitorControl implements Runnable {
     }
 
     private void walk() {
-        int sleepTime = visitor.getSpeed() ? (int) ((Math.random() * (5 - 1)) + 1) : (int) ((Math.random() * (10 - 6)) + 6);
+        int sleepTime = YorkshireDalesMTB.speed ? (int) ((Math.random() * (5 - 1)) + 1) : (int) ((Math.random() * (10 - 6)) + 6);
         System.out.println(Thread.currentThread().getName() + " walks around for " + sleepTime + " seconds.");
         try {
             TimeUnit.SECONDS.sleep(sleepTime);

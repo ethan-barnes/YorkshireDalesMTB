@@ -5,20 +5,10 @@ public class Visitor {
     private Status currentStatus;
     private Item[] items = new Item[4];
     private final Controller controller;
-    private boolean speed = true;
 
-    public Visitor(Controller controller, boolean speed) {
+    public Visitor(Controller controller) {
         currentStatus = null;
         this.controller = controller;
-        this.speed = speed;
-    }
-    
-    public boolean getSpeed() {
-        return speed;
-    }
-    
-    public void setSpeed(Boolean s) {
-        speed = s;
     }
 
     public Item[] getItems() {

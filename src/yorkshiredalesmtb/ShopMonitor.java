@@ -27,11 +27,11 @@ public class ShopMonitor {
         }
     }
     
-    public synchronized boolean takeItems(Item[] items, Boolean speed) {
+    public synchronized boolean takeItems(Item[] items) {
         Item[] cachedItems = this.items;
         for (Item item : items) {
             try {
-                if (speed) {
+                if (YorkshireDalesMTB.speed) {
                     TimeUnit.MILLISECONDS.sleep(100);
                 } else {
                     TimeUnit.MILLISECONDS.sleep(1000);
